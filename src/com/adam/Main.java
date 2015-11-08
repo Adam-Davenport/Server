@@ -10,8 +10,8 @@ public class Main {
         try {
             //Creating a socket with a port number
             ServerSocket s = new ServerSocket(8189);
-            boolean end = false;
-            while (!end) //put in a loop that keeps running
+            //Keeps the server running
+            while (true)
             {
                 Socket incoming = s.accept(); //accept a connection from a client
                 try {
@@ -25,23 +25,16 @@ public class Main {
                     //Variables needed for the text handling
                     boolean done = false;
                     int i = 0;
-                    //Infinite loop only closed by command, needs a way to stop.
+                    //Loop only closed by exception
                     while (!done)
                     {
-                        try {
-
-                            if (i == 0) {
-                                String temp = scan.nextLine();
-                                System.out.println(temp);
-                                out.println("Connection Accepted!");
-                                i++;
-                            } else {
-                                logic(scan, out);
-                            }
-                        }
-                        catch(Exception e)
-                        {
-                            e.printStackTrace();
+                        if (i == 0) {
+                            String temp = scan.nextLine();
+                            System.out.println(temp);
+                            out.println("Connection Accepted!");
+                            i++;
+                        } else {
+                            logic(scan, out);
                         }
                     }
                 } catch (Exception e) {
