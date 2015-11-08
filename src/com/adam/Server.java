@@ -71,25 +71,7 @@ public class Server {
                     else if (s.equals("2"))
                     {
                         s="";
-                        int i = 0;
-                        //Retrieves student array list from the Student class
-                        ArrayList<Student> students = Student.studentList();
-                        //This will only allow the user to enter a valid index
-                        while (i < 1 || i > students.size()) {
-                            try {
-								out.writeUTF("Enter a number between 1 and " + Integer.toString(students.size()));
-								i = Integer.parseInt(in.readUTF());
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        //Retrieves a valid index from the student array list
-                        Student stud = students.get(i - 1);
-                        //Sends a student in a readable format to the client
-                        t = stud.getFirstName() + " " + stud.getLastName() + ", Major: " + stud.getMajor() + ", Graduation Year: " + stud.getGradYear() + ". Press any key to continue...";
-						out.writeUTF(t);
-                        in.readUTF();
-
+                        studentManager();
                     }
                     else if(s.equals("exit"))
                     {
@@ -103,4 +85,32 @@ public class Server {
             }
         }
     }
+
+	private static void studentManager()
+	{
+		try {
+
+			int i = 0;
+			//Retrieves student array list from the Student class
+			ArrayList<Student> students = Student.studentList();
+			//This will only allow the user to enter a valid index
+			while (i < 1 || i > students.size()) {
+				try {
+					out.writeUTF("Enter a number between 1 and " + Integer.toString(students.size()));
+					i = Integer.parseInt(in.readUTF());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			//Retrieves a valid index from the student array list
+			Student stud = students.get(i - 1);
+			//Sends a student in a readable format to the client
+			out.writeUTF(stud.getFirstName() + " " + stud.getLastName() + ", Major: " + stud.getMajor() + ", Graduation Year: " + stud.getGradYear() + ". Press any key to continue...");
+			in.readUTF();
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
 }
