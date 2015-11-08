@@ -3,43 +3,40 @@ package com.adam;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Server {
 	private static ServerSocket server;
-	
+	private static DataInputStream in;
+	private static DataOutputStream out;
+	private static Socket incoming;
+
+
     public static void main(String[] args) {
         try {
-            //Creating a socket with a port number
+            //Creating a Serversocket with a port number
             server = new ServerSocket(8189);
             //Keeps the server running
             while (true)
             {
-                Socket incoming = server.accept(); //accept a connection from a client
+				System.out.println("Waiting for connection...");
+                incoming = server.accept(); //accept a connection from a client
                 try {
-                    //Input handler
-                    InputStream in = incoming.getInputStream();
-                    Scanner scan = new Scanner(in);
-                    //Output handler
-                    DataOutputStream outStream = new DataOutputStream(incoming.getOutputStream());
-                    //Printwriter has autoflush set to true
-                    PrintWriter out = new PrintWriter(outStream, true);
+					//Handle input and output
+					in = new DataInputStream(incoming.getInputStream());
+					System.out.println("Inputstream initiated");
+					out = new DataOutputStream(incoming.getOutputStream());
+					System.out.println("Outputstream initiated\n");
                     //Variables needed for the text handling
                     boolean done = false;
-                    int i = 0;
                     //Loop only closed by exception
                     while (!done)
                     {
-                        if (i == 0) {
-                            String temp = scan.nextLine();
-                            System.out.println(temp);
-                            out.println("Connection Accepted!");
-                            i++;
-                        } else {
-                            logic(scan, out);
-                        }
+						out.writeUTF("Connection Accepted!\n");
+						String temp = in.readUTF();
+						System.out.println(temp);
+						logic();
                     }
-                } catch (Exception e) {
+                } catch (IOException e) {
                     e.printStackTrace();
 
                 }
@@ -49,7 +46,8 @@ public class Server {
         }
     }
 
-    public static void logic(Scanner in, PrintWriter out) {
+
+    public static void logic() {
 
         //this is the method that accepts and returns input from the client
         String s = "temp";
@@ -59,16 +57,16 @@ public class Server {
             try {
                 while (!s.equals("1") || !s.equals("2"))
                 {
-                    out.println("Would you like to echo text or retrieve student information? (1 or 2): ");
-                    s = in.nextLine();
+                    out.writeUTF("Would you like to echo text or retrieve student information? (1 or 2):");
+                    s = in.readUTF();
 
                     if (s.equals("1"))
                     {
                         s="";
-                        out.println("Please enter some text:");
-                        t = in.nextLine();
-                        out.println(t + " Please press any key to continue...");
-                        in.nextLine();
+                        out.writeUTF("Please enter some text:");
+                        t = in.readUTF();
+                        out.writeUTF(t + " Please press any key to continue...");
+                        in.readUTF();
                     }
                     else if (s.equals("2"))
                     {
@@ -79,8 +77,8 @@ public class Server {
                         //This will only allow the user to enter a valid index
                         while (i < 1 || i > students.size()) {
                             try {
-                                out.println("Enter a number between 1 and " + Integer.toString(students.size()));
-                                i = Integer.parseInt(in.nextLine());
+								out.writeUTF("Enter a number between 1 and " + Integer.toString(students.size()));
+								i = Integer.parseInt(in.readUTF());
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -89,8 +87,8 @@ public class Server {
                         Student stud = students.get(i - 1);
                         //Sends a student in a readable format to the client
                         t = stud.getFirstName() + " " + stud.getLastName() + ", Major: " + stud.getMajor() + ", Graduation Year: " + stud.getGradYear() + ". Press any key to continue...";
-                        out.println(t);
-                        in.nextLine();
+						out.writeUTF(t);
+                        in.readUTF();
 
                     }
                     else if(s.equals("exit"))
