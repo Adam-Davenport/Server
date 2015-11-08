@@ -5,15 +5,17 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Main {
+public class Server {
+	private static ServerSocket server;
+	
     public static void main(String[] args) {
         try {
             //Creating a socket with a port number
-            ServerSocket s = new ServerSocket(8189);
+            server = new ServerSocket(8189);
             //Keeps the server running
             while (true)
             {
-                Socket incoming = s.accept(); //accept a connection from a client
+                Socket incoming = server.accept(); //accept a connection from a client
                 try {
                     //Input handler
                     InputStream in = incoming.getInputStream();
