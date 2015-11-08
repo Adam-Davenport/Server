@@ -63,10 +63,7 @@ public class Server {
                     if (s.equals("1"))
                     {
                         s="";
-                        out.writeUTF("Please enter some text:");
-                        t = in.readUTF();
-                        out.writeUTF(t + " Please press any key to continue...");
-                        in.readUTF();
+						echo();
                     }
                     else if (s.equals("2"))
                     {
@@ -86,7 +83,20 @@ public class Server {
         }
     }
 
-	private static void studentManager()
+	public static void echo()
+	{
+		try
+		{
+			out.writeUTF("Please enter some text:");
+			out.writeUTF(in.readUTF() + " Please press any key to continue...");
+			in.readUTF();
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	public static void studentManager()
 	{
 		try {
 
