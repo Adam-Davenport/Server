@@ -51,7 +51,6 @@ public class Server {
 
         //this is the method that accepts and returns input from the client
         String s = "temp";
-        String t;
         boolean done = false;
         while (!s.equals("1") || !s.equals("2") || !done) {
             try {
