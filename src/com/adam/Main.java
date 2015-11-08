@@ -25,7 +25,8 @@ public class Main {
                     //Variables needed for the text handling
                     boolean done = false;
                     int i = 0;
-                    while (!done) //while there are lines to read, for this connection
+                    //Infinite loop only closed by command, needs a way to stop.
+                    while (!done)
                     {
                         try {
 
@@ -57,21 +58,26 @@ public class Main {
 
         //this is the method that accepts and returns input from the client
         String s = "temp";
-        String t = "test";
+        String t;
         boolean done = false;
         while (!s.equals("1") || !s.equals("2") || !done) {
             try {
-                out.println("Would you like to echo text or retrieve student information? (1 or 2): ");
-                s = in.nextLine();
-                while (!s.equals("1") || !s.equals("2")) {
-                    if (s.equals("1")) {
+                while (!s.equals("1") || !s.equals("2"))
+                {
+                    out.println("Would you like to echo text or retrieve student information? (1 or 2): ");
+                    s = in.nextLine();
+
+                    if (s.equals("1"))
+                    {
                         s="";
                         out.println("Please enter some text:");
                         t = in.nextLine();
                         out.println(t + " Please press any key to continue...");
-                        t = in.nextLine();
-
-                    } else if (s.equals("2")) {
+                        in.nextLine();
+                    }
+                    else if (s.equals("2"))
+                    {
+                        s="";
                         int i = 0;
                         //Retrieves student array list from the Student class
                         ArrayList<Student> students = Student.studentList();
@@ -82,7 +88,6 @@ public class Main {
                                 i = Integer.parseInt(in.nextLine());
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                done = true;
                             }
                         }
                         //Retrieves a valid index from the student array list
@@ -90,15 +95,18 @@ public class Main {
                         //Sends a student in a readable format to the client
                         t = stud.getFirstName() + " " + stud.getLastName() + ", Major: " + stud.getMajor() + ", Graduation Year: " + stud.getGradYear() + ". Press any key to continue...";
                         out.println(t);
-                        t = in.nextLine();
+                        in.nextLine();
 
+                    }
+                    else if(s.equals("exit"))
+                    {
+                        done = true;
                     }
                 }
             }
             catch(Exception e)
             {
                 e.printStackTrace();
-                done = true;
             }
         }
     }
